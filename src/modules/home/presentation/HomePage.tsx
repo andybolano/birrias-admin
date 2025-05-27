@@ -3,17 +3,8 @@ import { useAuth } from "@/modules/auth/presentation/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
-  const { user, logout, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      // La redirección se maneja automáticamente en el hook
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -39,17 +30,12 @@ export const HomePage = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl font-bold">
-            Bienvenido, {user.name || user.fullname || "User"}!
-          </h1>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
-        </div>
-        <Button variant="outline" onClick={handleLogout}>
-          Logout
-        </Button>
+    <div className="container mx-auto p-4 pb-20">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Bienvenido, {user.name || user.fullname || "User"}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

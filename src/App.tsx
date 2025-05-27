@@ -6,108 +6,36 @@ import { CreateTournamentPage } from "./modules/tournaments/presentation/CreateT
 import { TournamentsPage } from "./modules/tournaments/presentation/TournamentsPage";
 import { TeamsPage } from "./modules/teams/presentation/TeamsPage";
 import { CreateTeamPage } from "./modules/teams/presentation/CreateTeamPage";
+import { ProfilePage } from "./modules/profile";
+import { ProtectedRoute } from "./modules/layout";
 import { useAuth } from "./modules/auth/presentation/context/AuthContext";
 
 const App = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-sm text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
+      {/* Auth Routes */}
       <Route
         path="/auth/login"
-        element={
-          isAuthenticated
-            ? (() => {
-                return <Navigate to="/" replace />;
-              })()
-            : (() => {
-                return <LoginForm />;
-              })()
-        }
+        element={isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />}
       />
       <Route
         path="/auth/register"
         element={
-          isAuthenticated
-            ? (() => {
-                return <Navigate to="/" replace />;
-              })()
-            : (() => {
-                return <RegisterForm />;
-              })()
+          isAuthenticated ? <Navigate to="/" replace /> : <RegisterForm />
         }
       />
-      <Route
-        path="/"
-        element={
-          isAuthenticated
-            ? (() => {
-                return <HomePage />;
-              })()
-            : (() => {
-                return <Navigate to="/auth/login" replace />;
-              })()
-        }
-      />
-      <Route
-        path="/tournaments"
-        element={
-          isAuthenticated
-            ? (() => {
-                return <TournamentsPage />;
-              })()
-            : (() => {
-                return <Navigate to="/auth/login" replace />;
-              })()
-        }
-      />
-      <Route
-        path="/tournaments/create"
-        element={
-          isAuthenticated
-            ? (() => {
-                return <CreateTournamentPage />;
-              })()
-            : (() => {
-                return <Navigate to="/auth/login" replace />;
-              })()
-        }
-      />
-      <Route
-        path="/teams"
-        element={
-          isAuthenticated
-            ? (() => {
-                return <TeamsPage />;
-              })()
-            : (() => {
-                return <Navigate to="/auth/login" replace />;
-              })()
-        }
-      />
-      <Route
-        path="/teams/create"
-        element={
-          isAuthenticated
-            ? (() => {
-                return <CreateTeamPage />;
-              })()
-            : (() => {
-                return <Navigate to="/auth/login" replace />;
-              })()
-        }
-      />
+
+      {/* Protected Routes with Layout */}
+      <Route path="/" element={<ProtectedRoute />}>
+        <Route index element={<HomePage />} />
+        <Route path="tournaments" element={<TournamentsPage />} />
+        <Route path="tournaments/create" element={<CreateTournamentPage />} />
+        <Route path="teams" element={<TeamsPage />} />
+        <Route path="teams/create" element={<CreateTeamPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+      </Route>
     </Routes>
   );
 };
