@@ -6,6 +6,7 @@ import { CreateTournamentPage } from "./modules/tournaments/presentation/CreateT
 import { TournamentsPage } from "./modules/tournaments/presentation/TournamentsPage";
 import { TeamsPage } from "./modules/teams/presentation/TeamsPage";
 import { CreateTeamPage } from "./modules/teams/presentation/CreateTeamPage";
+import { TeamDetailsPage } from "./modules/teams/presentation/TeamDetailsPage";
 import { ProfilePage } from "./modules/profile";
 import { ProtectedRoute } from "./modules/layout";
 import { useAuth } from "./modules/auth/presentation/context/AuthContext";
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="tournaments/create" element={<CreateTournamentPage />} />
         <Route path="teams" element={<TeamsPage />} />
         <Route path="teams/create" element={<CreateTeamPage />} />
+        <Route path="teams/:teamId" element={<TeamDetailsPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
     </Routes>

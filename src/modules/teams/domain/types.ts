@@ -4,11 +4,44 @@ export interface Team {
   shield?: string;
   created_at: string;
   updated_at: string;
+  players?: Player[];
 }
 
 export interface CreateTeamRequest {
   name: string;
   shield?: File;
+}
+
+export interface Player {
+  id: string;
+  position: string;
+  jersey: number;
+  birthDay: string;
+  first_name: string;
+  last_name: string;
+  identification_number: string;
+  eps: string;
+  team_id: string;
+  created_at: string;
+  updated_at: string;
+  pivot?: {
+    team_id: string;
+    player_id: string;
+    id: string;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+export interface CreatePlayerRequest {
+  position: string;
+  jersey: number;
+  birthDay: string;
+  first_name: string;
+  last_name: string;
+  identification_number: string;
+  eps: string;
+  team_id: string;
 }
 
 export interface TeamsResponse {
@@ -32,3 +65,4 @@ export interface PaginationLink {
   label: string;
   active: boolean;
 }
+
