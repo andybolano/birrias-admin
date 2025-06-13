@@ -49,7 +49,7 @@ git push origin main
    - Ve a Site settings > Environment variables
    - Agrega las siguientes variables:
      ```
-     VITE_API_URL = https://bfubdcpazartagbuqyvz.supabase.co/functions/v1
+     VITE_API_URL = https://birrias-api.onrender.com/api
      NODE_ENV = production
      ```
 

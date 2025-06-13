@@ -1,8 +1,7 @@
 // Configuración centralizada de variables de entorno
 export const env = {
   API_URL:
-    import.meta.env.VITE_API_URL ||
-    "https://bfubdcpazartagbuqyvz.supabase.co/functions/v1",
+    import.meta.env.VITE_API_URL || "https://birrias-api.onrender.com/api",
   NODE_ENV: import.meta.env.NODE_ENV || "development",
   IS_DEVELOPMENT: import.meta.env.NODE_ENV === "development",
   IS_PRODUCTION: import.meta.env.NODE_ENV === "production",
