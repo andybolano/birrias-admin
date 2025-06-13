@@ -7,29 +7,29 @@ export const useTeam = (teamId: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchTeam = async () => {
     if (!teamId) {
       setTeam(null);
       return;
     }
 
-    const fetchTeam = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await teamsApi.getTeam(teamId);
-        setTeam(response.data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Error al cargar el equipo"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await teamsApi.getTeam(teamId);
+      setTeam(response.data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error al cargar el equipo"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchTeam();
   }, [teamId]);
 
-  return { team, loading, error };
+  return { team, loading, error, refetch: fetchTeam };
 };

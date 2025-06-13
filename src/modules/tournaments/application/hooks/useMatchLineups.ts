@@ -34,7 +34,7 @@ export const useMatchLineups = (
       setLoading(true);
       setError(null);
       const response = await tournamentsApi.getMatchLineups(matchId);
-      setLineups(response.data);
+      setLineups(response.data as MatchLineups);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Error al cargar las alineaciones"
