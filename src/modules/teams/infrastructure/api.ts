@@ -1,6 +1,5 @@
 import { request } from "@/core/request";
 import type {
-  TeamsResponse,
   CreateTeamRequest,
   Team,
   CreatePlayerRequest,
@@ -8,7 +7,10 @@ import type {
 } from "../domain/types";
 
 export const teamsApi = {
-  getTeams: () => request.get<TeamsResponse>("/teams"),
+  getTeams: (all: boolean = false) => {
+    const params = all ? { all: "true" } : {};
+    return request.get<Team[]>("/teams", { params });
+  },
 
   getTeam: (teamId: string) => request.get<Team>(`/teams/${teamId}`),
 
@@ -28,5 +30,23 @@ export const teamsApi = {
 
   createPlayer: (data: CreatePlayerRequest) => {
     return request.post<Player>("/players", data);
+  },
+
+  bulkUploadPlayers: (formData: FormData) => {
+    return request.post<{ message: string; players: Player[] }>(
+      "/players/import",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  },
+
+  downloadPlayerTemplate: () => {
+    return request.get("/players/template", {
+      responseType: "blob",
+    });
   },
 };

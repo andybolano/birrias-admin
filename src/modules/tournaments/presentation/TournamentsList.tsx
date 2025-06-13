@@ -24,7 +24,8 @@ const getStatusLabel = (status: string) => {
 const TournamentCard: React.FC<{
   tournament: Tournament;
   onViewDetails: (tournament: Tournament) => void;
-}> = ({ tournament, onViewDetails }) => {
+  onManageTournament: (tournament: Tournament) => void;
+}> = ({ tournament, onViewDetails, onManageTournament }) => {
   const statusInfo = getStatusLabel(tournament.status);
 
   return (
@@ -40,7 +41,7 @@ const TournamentCard: React.FC<{
         </span>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex flex-col space-y-2">
         <Button
           variant="outline"
           size="sm"
@@ -48,6 +49,14 @@ const TournamentCard: React.FC<{
           className="w-full"
         >
           Ver Detalles
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          onClick={() => onManageTournament(tournament)}
+          className="w-full"
+        >
+          Gestionar Torneo
         </Button>
       </div>
     </div>
@@ -59,15 +68,19 @@ export const TournamentsList: React.FC = () => {
   const navigate = useNavigate();
   const [selectedTournament, setSelectedTournament] =
     useState<Tournament | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
 
   const handleViewDetails = (tournament: Tournament) => {
     setSelectedTournament(tournament);
-    setIsDrawerOpen(true);
+    setIsDetailsDrawerOpen(true);
   };
 
-  const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
+  const handleManageTournament = (tournament: Tournament) => {
+    navigate(`/tournaments/${tournament.id}/manage`);
+  };
+
+  const handleCloseDetailsDrawer = () => {
+    setIsDetailsDrawerOpen(false);
     setSelectedTournament(null);
   };
 
@@ -129,12 +142,13 @@ export const TournamentsList: React.FC = () => {
             key={tournament.id}
             tournament={tournament}
             onViewDetails={handleViewDetails}
+            onManageTournament={handleManageTournament}
           />
         ))}
       </div>
 
       {/* Tournament Details Drawer */}
-      <Drawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
+      <Drawer isOpen={isDetailsDrawerOpen} onClose={handleCloseDetailsDrawer}>
         {selectedTournament && (
           <TournamentDetails tournament={selectedTournament} />
         )}

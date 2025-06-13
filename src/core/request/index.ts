@@ -46,6 +46,8 @@ export const request = {
     axiosInstance.post<T>(url, data, config),
   put: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     axiosInstance.put<T>(url, data, config),
+  patch: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    axiosInstance.patch<T>(url, data, config),
   delete: <T>(url: string, config?: AxiosRequestConfig) =>
     axiosInstance.delete<T>(url, config),
 };

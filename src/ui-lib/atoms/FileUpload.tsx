@@ -29,16 +29,60 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     setError(null);
 
     if (file) {
+      console.log("FileUpload - File selected:", {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        extension: file.name
+          .toLowerCase()
+          .substring(file.name.lastIndexOf(".")),
+      });
+      console.log("FileUpload - Accept prop:", accept);
+
       // Validate file size
       if (file.size > maxSize * 1024 * 1024) {
         setError(`El archivo debe ser menor a ${maxSize}MB`);
         return;
       }
 
-      // Validate file type
-      if (accept && !file.type.match(accept.replace("*", ".*"))) {
-        setError("Tipo de archivo no válido");
-        return;
+      // Validate file type - handle both MIME types and extensions
+      if (accept) {
+        const acceptedTypes = accept.split(",").map((type) => type.trim());
+        console.log("FileUpload - Accepted types:", acceptedTypes);
+        let isValidType = false;
+
+        for (const acceptType of acceptedTypes) {
+          if (acceptType.startsWith(".")) {
+            // Extension-based validation
+            const fileExtension = file.name
+              .toLowerCase()
+              .substring(file.name.lastIndexOf("."));
+            console.log(
+              `FileUpload - Checking extension: ${fileExtension} vs ${acceptType.toLowerCase()}`
+            );
+            if (fileExtension === acceptType.toLowerCase()) {
+              console.log("FileUpload - Extension match found!");
+              isValidType = true;
+              break;
+            }
+          } else {
+            // MIME type validation
+            console.log(
+              `FileUpload - Checking MIME: ${file.type} vs ${acceptType}`
+            );
+            if (file.type.match(acceptType.replace("*", ".*"))) {
+              console.log("FileUpload - MIME match found!");
+              isValidType = true;
+              break;
+            }
+          }
+        }
+
+        console.log("FileUpload - Is valid type:", isValidType);
+        if (!isValidType) {
+          setError("Tipo de archivo no válido");
+          return;
+        }
       }
 
       setSelectedFile(file);

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/ui-lib/atoms/Button";
 import { DrawerWrapper as Drawer } from "@/ui-lib/atoms/DrawerWrapper";
 import { useTeam } from "../application/hooks/useTeam";
 import { CreatePlayerDrawer } from "./CreatePlayerDrawer";
+import { BulkUploadPlayersDrawer } from "./BulkUploadPlayersDrawer";
 import { PlayersList } from "./PlayersList";
 
 export const TeamDetailsPage: React.FC = () => {
@@ -12,6 +13,26 @@ export const TeamDetailsPage: React.FC = () => {
   const { team, loading, error, refetch } = useTeam(teamId!);
   const [isCreatePlayerDrawerOpen, setIsCreatePlayerDrawerOpen] =
     useState(false);
+  const [isBulkUploadDrawerOpen, setIsBulkUploadDrawerOpen] = useState(false);
+  const [showAddMenu, setShowAddMenu] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowAddMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleCreatePlayerSuccess = () => {
     setIsCreatePlayerDrawerOpen(false);
@@ -21,6 +42,26 @@ export const TeamDetailsPage: React.FC = () => {
 
   const handleCreatePlayerCancel = () => {
     setIsCreatePlayerDrawerOpen(false);
+  };
+
+  const handleBulkUploadSuccess = () => {
+    setIsBulkUploadDrawerOpen(false);
+    // Refresh team data to get updated players list
+    refetch();
+  };
+
+  const handleBulkUploadCancel = () => {
+    setIsBulkUploadDrawerOpen(false);
+  };
+
+  const handleAddIndividual = () => {
+    setShowAddMenu(false);
+    setIsCreatePlayerDrawerOpen(true);
+  };
+
+  const handleAddBulk = () => {
+    setShowAddMenu(false);
+    setIsBulkUploadDrawerOpen(true);
   };
 
   if (loading) {
@@ -109,7 +150,7 @@ export const TeamDetailsPage: React.FC = () => {
         </div>
 
         {/* Team Information - Compact */}
-        <div className="flex items-center justify-between mb-6  bg-muted/30 rounded-lg">
+        <div className="flex items-center justify-between mb-6 p-4 bg-muted/30 rounded-lg">
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
               {team.shield ? (
@@ -145,25 +186,91 @@ export const TeamDetailsPage: React.FC = () => {
               </p>
             </div>
           </div>
-          <Button
-            variant="default"
-            onClick={() => setIsCreatePlayerDrawerOpen(true)}
-          >
-            <svg
-              className="h-4 w-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+
+          {/* Add Players Dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <Button
+              variant="default"
+              onClick={() => setShowAddMenu(!showAddMenu)}
+              className="flex items-center"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-            Agregar Jugador
-          </Button>
+              <svg
+                className="h-4 w-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              Agregar Jugadores
+              <svg
+                className={`h-4 w-4 ml-2 transition-transform ${
+                  showAddMenu ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </Button>
+
+            {/* Dropdown Menu */}
+            {showAddMenu && (
+              <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                <div className="py-1">
+                  <button
+                    onClick={handleAddIndividual}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <svg
+                      className="h-4 w-4 mr-3 text-gray-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    Agregar Jugador Individual
+                  </button>
+                  <button
+                    onClick={handleAddBulk}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <svg
+                      className="h-4 w-4 mr-3 text-gray-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Carga Masiva (CSV)
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Players Section */}
@@ -186,6 +293,19 @@ export const TeamDetailsPage: React.FC = () => {
           teamId={teamId!}
           onSuccess={handleCreatePlayerSuccess}
           onCancel={handleCreatePlayerCancel}
+        />
+      </Drawer>
+
+      {/* Bulk Upload Drawer */}
+      <Drawer
+        isOpen={isBulkUploadDrawerOpen}
+        onClose={handleBulkUploadCancel}
+        title="Carga Masiva de Jugadores"
+      >
+        <BulkUploadPlayersDrawer
+          teamId={teamId!}
+          onSuccess={handleBulkUploadSuccess}
+          onCancel={handleBulkUploadCancel}
         />
       </Drawer>
     </>

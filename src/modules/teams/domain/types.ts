@@ -5,6 +5,7 @@ export interface Team {
   created_at: string;
   updated_at: string;
   players?: Player[];
+  tournaments?: unknown[];
 }
 
 export interface CreateTeamRequest {

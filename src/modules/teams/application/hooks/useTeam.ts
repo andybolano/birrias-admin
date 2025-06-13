@@ -4,34 +4,32 @@ import type { Team } from "../../domain/types";
 
 export const useTeam = (teamId: string) => {
   const [team, setTeam] = useState<Team | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTeam = async () => {
-    try {
-      setLoading(true);
-      const response = await teamsApi.getTeam(teamId);
-      setTeam(response.data);
-      setError(null);
-    } catch (err: unknown) {
-      setError("Error al cargar el equipo");
-      console.error("Error fetching team:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (teamId) {
-      fetchTeam();
+    if (!teamId) {
+      setTeam(null);
+      return;
     }
+
+    const fetchTeam = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await teamsApi.getTeam(teamId);
+        setTeam(response.data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Error al cargar el equipo"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeam();
   }, [teamId]);
 
-  const refetch = () => {
-    if (teamId) {
-      fetchTeam();
-    }
-  };
-
-  return { team, loading, error, refetch };
+  return { team, loading, error };
 };

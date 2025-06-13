@@ -4,6 +4,7 @@ import { RegisterForm } from "./modules/auth/presentation/RegisterForm";
 import { HomePage } from "./modules/home/presentation/HomePage";
 import { CreateTournamentPage } from "./modules/tournaments/presentation/CreateTournamentPage";
 import { TournamentsPage } from "./modules/tournaments/presentation/TournamentsPage";
+import { ManageTournamentPage } from "./modules/tournaments/presentation/ManageTournamentPage";
 import { TeamsPage } from "./modules/teams/presentation/TeamsPage";
 import { CreateTeamPage } from "./modules/teams/presentation/CreateTeamPage";
 import { TeamDetailsPage } from "./modules/teams/presentation/TeamDetailsPage";
@@ -33,6 +34,10 @@ const App = () => {
         <Route index element={<HomePage />} />
         <Route path="tournaments" element={<TournamentsPage />} />
         <Route path="tournaments/create" element={<CreateTournamentPage />} />
+        <Route
+          path="tournaments/:tournamentId/manage"
+          element={<ManageTournamentPage />}
+        />
         <Route path="teams" element={<TeamsPage />} />
         <Route path="teams/create" element={<CreateTeamPage />} />
         <Route path="teams/:teamId" element={<TeamDetailsPage />} />

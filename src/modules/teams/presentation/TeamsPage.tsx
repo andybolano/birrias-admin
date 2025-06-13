@@ -6,10 +6,15 @@ import { CreateTeamDrawer } from "./CreateTeamDrawer";
 
 export const TeamsPage: React.FC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [teamsCount, setTeamsCount] = useState<number>(0);
   const refetchTeamsRef = useRef<(() => void) | null>(null);
 
   const handleRefetchReady = (refetch: () => void) => {
     refetchTeamsRef.current = refetch;
+  };
+
+  const handleTeamsCountUpdate = (count: number) => {
+    setTeamsCount(count);
   };
 
   const handleCreateSuccess = () => {
@@ -28,13 +33,21 @@ export const TeamsPage: React.FC = () => {
     <>
       <div className="container mx-auto p-4 pb-20">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Equipos</h1>
+          <div className="flex items-center space-x-2">
+            <h1 className="text-2xl font-bold">Equipos</h1>
+            <span className="bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium">
+              {teamsCount}
+            </span>
+          </div>
           <Button variant="default" onClick={() => setIsCreateDrawerOpen(true)}>
             Crear Nuevo Equipo
           </Button>
         </div>
 
-        <TeamsList onRefetchReady={handleRefetchReady} />
+        <TeamsList
+          onRefetchReady={handleRefetchReady}
+          onTeamsCountUpdate={handleTeamsCountUpdate}
+        />
       </div>
 
       {/* Create Team Drawer */}
