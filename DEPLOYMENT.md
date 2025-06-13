@@ -13,7 +13,7 @@ Este documento contiene las instrucciones para desplegar el proyecto **Birrias A
 
 ### 2. Configuraciones Incluidas
 
-- ✅ Build command: `npm run build`
+- ✅ Build command: `npm run build:prod` (optimizado para Netlify)
 - ✅ Publish directory: `dist`
 - ✅ Node.js version: 18
 - ✅ SPA redirects para React Router
@@ -41,7 +41,7 @@ git push origin main
    - Selecciona el repositorio `birrias-admin`
 
 2. **Configuración de Build** (debería detectarse automáticamente):
-   - **Build command**: `npm run build`
+   - **Build command**: `npm run build:prod`
    - **Publish directory**: `dist`
    - **Base directory**: (dejar vacío)
 
@@ -69,8 +69,11 @@ git push origin main
 ## Comandos Útiles
 
 ```bash
-# Construir localmente para verificar
+# Construir localmente para verificar (desarrollo)
 npm run build
+
+# Construir para producción (igual que Netlify)
+npm run build:prod
 
 # Preview del build local
 npm run preview
@@ -100,8 +103,11 @@ Después del despliegue, verifica que:
 ### Problema: Build falla
 **Solución**: 
 1. Verifica que `package.json` tenga todas las dependencias
-2. Ejecuta `npm run build` localmente para identificar errores
+2. Ejecuta `npm run build:prod` localmente para identificar errores
 3. Revisa los logs de build en Netlify
+
+### Problema: "tsc: not found" en Netlify
+**Solución**: Este error se resuelve usando `npm run build:prod` en lugar de `npm run build`. El script `build:prod` usa solo Vite sin TypeScript compilation por separado, evitando problemas de dependencias en Netlify.
 
 ### Problema: Assets no cargan
 **Solución**: Verifica que la configuración de `base` en `vite.config.ts` sea correcta para tu dominio.

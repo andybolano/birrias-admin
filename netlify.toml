@@ -3,7 +3,7 @@
   publish = "dist"
   
   # Comando para construir el proyecto
-  command = "npm run build"
+  command = "npm run build:prod"
 
 [build.environment]
   # Versión de Node.js a usar
