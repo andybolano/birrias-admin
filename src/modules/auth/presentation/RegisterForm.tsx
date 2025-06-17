@@ -11,7 +11,7 @@ export const RegisterForm = () => {
     email: "",
     password: "",
     password_confirmation: "",
-    name: "",
+    fullname: "",
     phone: "",
   });
 
@@ -50,9 +50,9 @@ export const RegisterForm = () => {
             <Input
               id="fullname"
               type="text"
-              value={credentials.name}
+              value={credentials.fullname}
               onChange={(e) =>
-                setCredentials({ ...credentials, name: e.target.value })
+                setCredentials({ ...credentials, fullname: e.target.value })
               }
               placeholder="Juan Pérez"
               required

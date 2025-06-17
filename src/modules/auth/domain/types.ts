@@ -54,6 +54,6 @@ export interface RegisterCredentials {
   email: string;
   password: string;
   password_confirmation: string;
-  name: string;
+  fullname: string;
   phone: string;
 }
